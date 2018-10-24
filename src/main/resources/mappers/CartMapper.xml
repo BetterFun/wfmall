@@ -116,4 +116,39 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM mmall_cart
+    WHERE user_id=#{userId}
+
+  </select>
+
+  <select id="selectByUserIdAndProductId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM mmall_cart
+    WHERE user_id=#{userId}
+    and product_id=#{productId}
+  </select>
+  
+  <select id="selectAllCheckByUserId" resultType="int" >
+    SELECT cout(1)
+    FROM mmall_cart
+    WHERE checked = 0
+    AND user_id = #{userId}
+  </select>
+  
+  <delete id="deleteByUserIdAndProductIds" parameterType="map">
+    DELETE FROM mmall_cart
+    WHERE user_id=#{userId}
+    <if test="productIdList!=null" >
+      and product_id in
+      <foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+  </delete>
 </mapper>

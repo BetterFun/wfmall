@@ -60,4 +60,57 @@ public class CartController {
         return iCartService.deleteCart(user.getId(),productIds);
     }
 
+    @RequestMapping("select_all.do")
+    @ResponseBody
+    public ServiceResponse selectAll(HttpSession session){
+        User user= (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(),null,Const.Cart.CHECKED);
+
+    }
+
+    @RequestMapping("unselect_all.do")
+    @ResponseBody
+    public ServiceResponse unSelectAll(HttpSession session){
+        User user= (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(),null,Const.Cart.UN_CHECK);
+    }
+
+    @RequestMapping("checked.do")
+    @ResponseBody
+    public ServiceResponse checked(HttpSession session,Integer productId){
+        User user= (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(),productId,Const.Cart.CHECKED);
+
+    }
+
+    @RequestMapping("unchecked.do")
+    @ResponseBody
+    public ServiceResponse unchecked(HttpSession session,Integer productId){
+        User user= (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(),productId,Const.Cart.UN_CHECK);
+
+    }
+
+    @RequestMapping("get_cart_productCount.do")
+    @ResponseBody
+    public ServiceResponse getCartProductCount(HttpSession session){
+        User user= (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createBySuccess(0);
+        }
+        return iCartService.getCartProductCount(user.getId());
+
+    }
 }

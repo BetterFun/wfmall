@@ -50,8 +50,7 @@ public class CartService implements ICartService {
             cart.setQuantity(count+cart.getQuantity());
             cartMapper.updateByPrimaryKeySelective(cart);
         }
-        CartVo cartVo=getCartVo(userId);
-        return ServiceResponse.createBySuccess(cartVo);
+        return this.listCart(userId);
     }
 
     @Override
@@ -70,8 +69,7 @@ public class CartService implements ICartService {
             cart.setQuantity(count);
         }
         cartMapper.updateByPrimaryKeySelective(cart);
-        CartVo cartVo=getCartVo(userId);
-        return ServiceResponse.createBySuccess(cartVo);
+        return this.listCart(userId);
     }
 
     @Override
@@ -85,13 +83,27 @@ public class CartService implements ICartService {
             productIdList.add(Integer.valueOf(productId[i]));
         }
         cartMapper.deleteByUserIdAndProductIds(userId,productIdList);
-        CartVo cartVo=getCartVo(userId);
-        return ServiceResponse.createBySuccess(cartVo);
+        return this.listCart(userId);
+    }
+
+    @Override
+    public ServiceResponse selectOrUnSelect(Integer userId,Integer productId,Integer checked){
+        cartMapper.checkedOrUnCheckedProduct(userId,productId,checked);
+        return this.listCart(userId);
+    }
+
+    @Override
+    public ServiceResponse getCartProductCount(Integer userId) {
+        if(userId == null){
+            return ServiceResponse.createBySuccess(0);
+        }
+        int count=cartMapper.selectCartProductCount(userId);
+        return ServiceResponse.createBySuccess(count);
     }
 
     private CartVo getCartVo(Integer userId){
         List<Cart> cartList=cartMapper.selectByUserId(userId);
-        if(cartList != null){
+        if(cartList == null){
             return null;
         }
 

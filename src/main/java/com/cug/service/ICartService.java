@@ -13,4 +13,8 @@ public interface ICartService {
     ServiceResponse updateCart(Integer userId, Integer productId, Integer count);
 
     ServiceResponse deleteCart(Integer userId, String productIds);
+
+    ServiceResponse selectOrUnSelect(Integer id, Integer productId, Integer checked);
+
+    ServiceResponse getCartProductCount(Integer userId);
 }
